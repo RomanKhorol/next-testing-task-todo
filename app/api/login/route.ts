@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/app/lib/firebase";
+import { setAuthCookie } from "@/app/helpers/setAuthCookie";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,11 +12,13 @@ export async function POST(req: NextRequest) {
       password
     );
     const user = userCredential.user;
-
-    return NextResponse.json(
+    const token = await user.getIdToken();
+    const response = NextResponse.json(
       { message: "Login successful", user },
       { status: 200 }
     );
+    setAuthCookie(response, token);
+    return response;
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 400 });

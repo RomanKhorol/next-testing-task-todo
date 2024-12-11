@@ -11,7 +11,7 @@ export default function LogOutBtn() {
       });
 
       if (response.ok) {
-        router.push("/"); // Перенаправляем пользователя на главную страницу
+        router.push("/");
       } else {
         alert("Logout failed. Please try again.");
       }
