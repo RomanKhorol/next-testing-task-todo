@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+# Ignore local environment variables
+.env.local
 
 # next.js
 /.next/

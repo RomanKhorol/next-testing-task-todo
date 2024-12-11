@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import "../app/lib/firebase";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { ReduxProvider } from "@/components/ReduxProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,10 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        <Header />
+        <main className="flex-grow min-h-screen">
+          <ReduxProvider>{children}</ReduxProvider>
+        </main>
+
+        <Footer />
       </body>
     </html>
   );
