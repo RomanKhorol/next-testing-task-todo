@@ -96,7 +96,7 @@ describe("Form Component", () => {
       "password123"
     );
 
-    await screen.findByTestId("submit-button"); // Wait for any related side effects
+    await screen.findByTestId("submit-button");
 
     expect(mockDispatch).toHaveBeenCalledWith(
       setUser({
@@ -110,7 +110,6 @@ describe("Form Component", () => {
   });
 
   test("displays toast on authentication error", async () => {
-    // Замокируем ошибку для authUser
     authUser.mockRejectedValueOnce(new Error("Invalid credentials"));
 
     render(

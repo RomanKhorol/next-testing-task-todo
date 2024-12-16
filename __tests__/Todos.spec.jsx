@@ -22,7 +22,7 @@ const mockRouter = {
 beforeEach(() => {
   jest.spyOn(global, "fetch").mockResolvedValue({
     ok: true,
-    json: async () => [], // Тестовые данные для задач
+    json: async () => [],
   });
   useRouter.mockReturnValue(mockRouter);
 });
