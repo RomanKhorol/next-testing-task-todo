@@ -37,13 +37,13 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
       const response = await fetch(apiEndpoint, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        next: { tags: ["tasks"] },
       });
 
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || "Failed to delete task");
       }
-
       toast.success("Task deleted successfully!");
       router.push("/todos");
     } catch (error) {
@@ -67,6 +67,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, description }),
+        next: { tags: ["tasks"] },
       });
 
       if (!response.ok) {

@@ -10,10 +10,27 @@ import { AppRouterContextProviderMock } from "../mocks/app-router-context-provid
 import "@testing-library/jest-dom";
 
 const mockApiEndpoint = "/api/tasks";
-global.fetch = jest.fn();
+
+// Мокаем глобальный fetch
+global.fetch = jest.fn(async (url, options) => {
+  console.log("Fetch called with:", url, options);
+
+  if (options?.next) {
+    delete options.next; // Удаляем `next`, если он был
+  }
+
+  return {
+    ok: true,
+    json: jest.fn().mockResolvedValue({}),
+  };
+});
 
 describe("AddTaskForm", () => {
-  test("should renders correctly with initial values", async () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should render correctly with initial values", async () => {
     const push = jest.fn();
     render(
       <AppRouterContextProviderMock router={{ push }}>
@@ -34,7 +51,7 @@ describe("AddTaskForm", () => {
     );
   });
 
-  test("should validates inputs before submitting", async () => {
+  test("should validate inputs before submitting", async () => {
     const push = jest.fn();
     render(
       <AppRouterContextProviderMock router={{ push }}>
@@ -50,14 +67,8 @@ describe("AddTaskForm", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  test("should submits form and calls API on successful task creation", async () => {
+  test("should submit form and call API on successful task creation", async () => {
     const push = jest.fn();
-
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockResolvedValue({}),
-    });
-
     render(
       <AppRouterContextProviderMock router={{ push }}>
         <AddTaskForm
@@ -76,23 +87,21 @@ describe("AddTaskForm", () => {
     });
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(mockApiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: "Test Task",
-          description: "Test Description",
-        }),
-      });
+      expect(global.fetch).toHaveBeenCalledWith(
+        mockApiEndpoint,
+        expect.objectContaining({
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: "Test Task",
+            description: "Test Description",
+          }),
+        })
+      );
     });
   });
 
-  test("deletes task and calls API on successful deletion", async () => {
-    global.fetch.mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockResolvedValue({}),
-    });
-
+  test("should delete a task and call API correctly without 'next' affecting behavior", async () => {
     const push = jest.fn();
     render(
       <AppRouterContextProviderMock router={{ push }}>
@@ -107,15 +116,19 @@ describe("AddTaskForm", () => {
     );
 
     const deleteButton = screen.getByText("Delete");
+
     await act(async () => {
       fireEvent.click(deleteButton);
     });
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(mockApiEndpoint, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+      expect(global.fetch).toHaveBeenCalledWith(
+        mockApiEndpoint,
+        expect.objectContaining({
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        })
+      );
     });
   });
 });
