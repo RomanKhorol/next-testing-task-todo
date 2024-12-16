@@ -31,7 +31,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
     router.push("/todos");
   };
 
-  const handleDelete = async (id: string): Promise<void> => {
+  const handleDelete = async (): Promise<void> => {
     try {
       setLoading(true);
       const response = await fetch(apiEndpoint, {
@@ -136,7 +136,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         </button>
         {id && (
           <button
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete()}
             className={`px-4 py-2 rounded-lg text-white ${
               loading ? "bg-gray-400" : "bg-red-500 hover:bg-red-600"
             }`}

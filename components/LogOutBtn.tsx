@@ -19,6 +19,7 @@ export default function LogOutBtn() {
         toast.warn("Logout failed. Please try again.");
       }
     } catch (error) {
+      console.log(error);
       toast.error("An unexpected error occurred during logout.");
     }
   };

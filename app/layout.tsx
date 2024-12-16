@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "../app/lib/firebase";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { ReduxProvider } from "@/components/ReduxProvider";
 import React from "react";
 import { ToastContainer } from "react-toastify";
