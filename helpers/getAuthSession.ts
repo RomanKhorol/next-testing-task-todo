@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { auth } from "@/app/lib/firebaseAdmin";
+import { auth } from "../app/lib/firebaseAdmin";
 
 export async function getAuthSession() {
   const cookieStore = cookies();
@@ -11,7 +11,6 @@ export async function getAuthSession() {
     const decodedToken = await auth.verifyIdToken(token);
     return decodedToken;
   } catch (error) {
-    console.log(error);
     return null;
   }
 }

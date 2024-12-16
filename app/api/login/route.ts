@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/app/lib/firebase";
-import { setAuthCookie } from "@/app/helpers/setAuthCookie";
+import { auth } from "../../lib/firebase";
+import { setAuthCookie } from "../../../helpers/setAuthCookie";
 
 export async function POST(req: NextRequest) {
   try {

@@ -29,11 +29,6 @@ export async function authUser(
     }
   } catch (error) {
     if (error instanceof Error) {
-      alert(
-        `${endpoint.charAt(0).toUpperCase() + endpoint.slice(1)} failed: ${
-          error.message
-        }`
-      );
       throw error;
     }
     throw new Error("Unexpected error occurred");

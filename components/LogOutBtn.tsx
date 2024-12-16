@@ -1,9 +1,11 @@
 "use client";
-
+import React from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function LogOutBtn() {
   const router = useRouter();
+
   const handleLogout = async () => {
     try {
       const response = await fetch("/api/logout", {
@@ -11,18 +13,22 @@ export default function LogOutBtn() {
       });
 
       if (response.ok) {
+        toast.success("Logged out successfully.");
         router.push("/");
       } else {
-        alert("Logout failed. Please try again.");
+        toast.warn("Logout failed. Please try again.");
       }
     } catch (error) {
-      console.error("Logout error:", error);
-      alert("An error occurred during logout.");
+      toast.error("An unexpected error occurred during logout.");
     }
   };
+
   return (
-    <div>
-      <button onClick={handleLogout}>Log Out</button>
-    </div>
+    <button
+      onClick={handleLogout}
+      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+    >
+      Log Out
+    </button>
   );
 }
