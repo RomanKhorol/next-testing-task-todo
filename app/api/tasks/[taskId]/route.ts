@@ -10,7 +10,7 @@ export async function GET(
     return new Response(JSON.stringify({ error: "Missing ID" }), {
       status: 400,
     });
-
+  revalidateTag("tasks");
   const taskDocRef = doc(db, "tasks", taskId);
   const taskSnapshot = await getDoc(taskDocRef);
 
