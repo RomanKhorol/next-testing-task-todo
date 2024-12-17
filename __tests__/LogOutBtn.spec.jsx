@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LogOutBtn from "../components/LogOutBtn";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -11,106 +11,112 @@ jest.mock("react-toastify", () => ({
     success: jest.fn(),
   },
 }));
-const mockPush = jest.fn();
 
+// Мок useRouter
+const mockPush = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: mockPush,
   })),
 }));
 
+// Мокаем fetch глобально
+beforeEach(() => {
+  jest.clearAllMocks();
+  global.fetch = jest.fn();
+});
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+
 describe("LogOutBtn Component", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
+  // Проверяем рендер кнопки
   test("renders the logout button", () => {
-    const push = jest.fn();
-
     render(
-      <AppRouterContextProviderMock router={{ push }}>
+      <AppRouterContextProviderMock router={{ push: mockPush }}>
         <LogOutBtn />
       </AppRouterContextProviderMock>
     );
 
-    const button = screen.getByText("Log Out");
-    expect(button).toBeInTheDocument();
+    expect(screen.getByText("Log Out")).toBeInTheDocument();
   });
 
+  // Проверяем успешный сценарий
   test("calls fetch and redirects to '/' on successful logout", async () => {
-    const push = jest.fn();
+    global.fetch.mockResolvedValueOnce({ ok: true });
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
+    render(
+      <AppRouterContextProviderMock router={{ push: mockPush }}>
+        <LogOutBtn />
+      </AppRouterContextProviderMock>
+    );
+
+    fireEvent.click(screen.getByText("Log Out"));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${apiUrl}/logout`,
+      expect.objectContaining({
+        method: "POST",
+        next: { tags: ["tasks"] },
       })
     );
 
-    render(
-      <AppRouterContextProviderMock router={{ push }}>
-        <LogOutBtn />
-      </AppRouterContextProviderMock>
-    );
-
-    const button = screen.getByText("Log Out");
-    fireEvent.click(button);
-    await screen.findByText("Log Out");
-    expect(global.fetch).toHaveBeenCalledWith("/api/logout", {
-      method: "POST",
-    });
-
+    expect(toast.success).toHaveBeenCalledWith("Logged out successfully.");
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 
+  // Проверяем ошибку сервера
   test("shows a toast message on failed logout", async () => {
-    const push = jest.fn();
+    global.fetch.mockResolvedValueOnce({ ok: false });
 
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: false,
+    render(
+      <AppRouterContextProviderMock router={{ push: mockPush }}>
+        <LogOutBtn />
+      </AppRouterContextProviderMock>
+    );
+
+    fireEvent.click(screen.getByText("Log Out"));
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${apiUrl}/logout`,
+      expect.objectContaining({
+        method: "POST",
+        next: { tags: ["tasks"] },
       })
     );
 
-    render(
-      <AppRouterContextProviderMock router={{ push }}>
-        <LogOutBtn />
-      </AppRouterContextProviderMock>
-    );
-
-    const button = screen.getByText("Log Out");
-    fireEvent.click(button);
-
-    expect(global.fetch).toHaveBeenCalledWith("/api/logout", {
-      method: "POST",
-    });
-
-    await screen.findByText("Log Out");
-
     expect(toast.warn).toHaveBeenCalledWith("Logout failed. Please try again.");
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
-  test("shows a toast message on fetch error", async () => {
-    const push = jest.fn();
-
-    global.fetch = jest.fn(() => Promise.reject(new Error("Network error")));
+  // Проверяем сетевую ошибку
+  test("handles fetch error gracefully", async () => {
+    global.fetch.mockRejectedValueOnce(new Error("Network error"));
 
     render(
-      <AppRouterContextProviderMock router={{ push }}>
+      <AppRouterContextProviderMock router={{ push: mockPush }}>
         <LogOutBtn />
       </AppRouterContextProviderMock>
     );
 
-    const button = screen.getByText("Log Out");
-    fireEvent.click(button);
+    fireEvent.click(screen.getByText("Log Out"));
 
-    expect(global.fetch).toHaveBeenCalledWith("/api/logout", {
-      method: "POST",
-    });
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
 
-    await screen.findByText("Log Out");
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${apiUrl}/logout`,
+      expect.objectContaining({
+        method: "POST",
+        next: { tags: ["tasks"] },
+      })
+    );
 
     expect(toast.error).toHaveBeenCalledWith(
       "An unexpected error occurred during logout."
     );
+    expect(mockPush).not.toHaveBeenCalled();
   });
 });

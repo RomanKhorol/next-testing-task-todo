@@ -14,7 +14,9 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function getTasks(): Promise<TaskType[]> {
   try {
-    const response = await fetch(`${apiUrl}/tasks`);
+    const response = await fetch(`${apiUrl}/tasks`, {
+      next: { tags: ["tasks"] },
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }
@@ -37,7 +39,6 @@ export default async function Todos() {
   }
 
   const tasks = await getTasks();
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-8 sm:px-20">
       <header className="text-center mb-12">

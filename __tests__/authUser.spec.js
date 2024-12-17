@@ -12,7 +12,7 @@ describe("authUser", () => {
     uid: "mockUID",
   };
 
-  it("should register user and return User obj", async () => {
+  test("should register user and return User obj", async () => {
     fetchMock.mockResponseOnce(JSON.stringify({ user: mockUser }), {
       status: 200,
     });
@@ -33,11 +33,12 @@ describe("authUser", () => {
           email: "test@example.com",
           password: "password123",
         }),
+        next: { tags: ["tasks"] }, // Новое свойство
       }
     );
   });
 
-  it("should login user and return User obj", async () => {
+  test("should login user and return User obj", async () => {
     fetchMock.mockResponseOnce(JSON.stringify({ user: mockUser }), {
       status: 200,
     });
@@ -52,10 +53,11 @@ describe("authUser", () => {
         email: "test@example.com",
         password: "password123",
       }),
+      next: { tags: ["tasks"] }, // Новое свойство
     });
   });
 
-  it("should return error during server responce not ok", async () => {
+  test("should return error during server response not ok", async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({ message: "Invalid credentials" }),
       { status: 401 }
@@ -72,10 +74,11 @@ describe("authUser", () => {
         email: "wrong@example.com",
         password: "wrongpassword",
       }),
+      next: { tags: ["tasks"] }, // Новое свойство
     });
   });
 
-  it("should return error during unexpected error", async () => {
+  test("should return error during unexpected error", async () => {
     fetchMock.mockRejectOnce(new Error("Unexpected error"));
 
     await expect(
