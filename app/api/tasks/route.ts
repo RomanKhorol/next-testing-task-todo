@@ -7,7 +7,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 export async function GET() {
-  revalidateTag("tasks");
+  await revalidateTag("tasks");
 
   const tasksCollection = collection(db, "tasks");
   const snapshot = await getDocs(tasksCollection);
