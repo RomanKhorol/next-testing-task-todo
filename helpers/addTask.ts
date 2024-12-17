@@ -6,7 +6,7 @@ export async function addTask(
   description: string
 ): Promise<TaskType> {
   try {
-    const response = await fetch(`${apiUrl}/api/tasks`, {
+    const response = await fetch(`${apiUrl}/tasks`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description }),

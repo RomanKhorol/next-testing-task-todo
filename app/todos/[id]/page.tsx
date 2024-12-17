@@ -14,7 +14,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function getTask(id: string): Promise<TaskType | undefined | null> {
   try {
-    const response = await fetch(`${apiUrl}/${id}`, {
+    const response = await fetch(`${apiUrl}/tasks/${id}`, {
       method: "GET",
       credentials: "include",
     });

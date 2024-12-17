@@ -14,7 +14,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function getTasks(): Promise<TaskType[]> {
   try {
-    const response = await fetch(`${apiUrl}/api/tasks`);
+    const response = await fetch(`${apiUrl}/tasks`);
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }
