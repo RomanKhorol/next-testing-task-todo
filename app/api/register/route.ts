@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 import { setAuthCookie } from "../../../helpers/setAuthCookie";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,7 +33,9 @@ export async function POST(req: NextRequest) {
     );
 
     setAuthCookie(response, token);
-    revalidateTag("tasks");
+    await revalidateTag("tasks");
+    await revalidatePath("/todos");
+
     return response;
   } catch (error) {
     if (error instanceof Error) {

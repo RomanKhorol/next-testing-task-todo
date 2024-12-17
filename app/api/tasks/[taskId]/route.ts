@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "../../../lib/firebase";
 import { doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 export async function GET(
@@ -10,7 +10,8 @@ export async function GET(
     return new Response(JSON.stringify({ error: "Missing ID" }), {
       status: 400,
     });
-  revalidateTag("tasks");
+  await revalidatePath("/todos");
+  await revalidateTag("tasks");
   const taskDocRef = doc(db, "tasks", taskId);
   const taskSnapshot = await getDoc(taskDocRef);
 
@@ -39,6 +40,7 @@ export async function DELETE(
   const todoDocRef = doc(db, "tasks", taskId);
 
   await deleteDoc(todoDocRef);
+  await revalidatePath("/todos");
   await revalidateTag("tasks");
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
@@ -62,5 +64,6 @@ export async function PUT(
     description: data.description,
   });
   await revalidateTag("tasks");
+  await revalidatePath("/todos");
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }

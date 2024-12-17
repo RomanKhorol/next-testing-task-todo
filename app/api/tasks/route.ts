@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { db } from "../../lib/firebase";
 import {
   collection,
@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 export async function GET() {
   await revalidateTag("tasks");
+  await revalidatePath("/todos");
 
   const tasksCollection = collection(db, "tasks");
   const snapshot = await getDocs(tasksCollection);
@@ -27,6 +28,8 @@ export async function POST(req: Request) {
     timestamp: serverTimestamp(),
   };
   const docRef = await addDoc(tasksCollection, newTask);
+  await revalidatePath("/todos");
+
   revalidateTag("tasks");
   return new Response(JSON.stringify({ id: docRef.id, ...newTask }), {
     status: 201,
