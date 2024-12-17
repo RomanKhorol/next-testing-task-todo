@@ -10,10 +10,11 @@ export const metadata: Metadata = {
   title: "Dashboard | List of Tasks",
   description: "List of Tasks",
 };
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function getTasks(): Promise<TaskType[]> {
   try {
-    const response = await fetch("http://localhost:3000/api/tasks");
+    const response = await fetch(`${apiUrl}/api/tasks`);
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }

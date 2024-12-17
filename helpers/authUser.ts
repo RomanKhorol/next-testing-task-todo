@@ -8,14 +8,14 @@ interface ApiResponse {
   user?: User;
   message?: string;
 }
-
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export async function authUser(
   endpoint: "register" | "login",
   email: string,
   password: string
 ): Promise<User> {
   try {
-    const response = await fetch(`http://localhost:3000/api/${endpoint}`, {
+    const response = await fetch(`${apiUrl}/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

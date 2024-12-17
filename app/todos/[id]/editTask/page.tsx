@@ -11,10 +11,11 @@ interface Props {
     id: string;
   };
 }
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function getTask(id: string): Promise<TaskType | undefined | null> {
   try {
-    const response = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+    const response = await fetch(`${apiUrl}/${id}`, {
       method: "GET",
       credentials: "include",
     });
@@ -85,7 +86,7 @@ export default async function EditPage({ params: { id } }: Props) {
           <AddTaskForm
             initialDescription={task.description}
             initialTitle={task.title}
-            apiEndpoint={`http://localhost:3000/api/tasks/${task.id}`}
+            apiEndpoint={`${apiUrl}/api/tasks/${task.id}`}
             method="PUT"
             id={task.id}
           />

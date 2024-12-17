@@ -2,13 +2,14 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default function LogOutBtn() {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/logout", {
+      const response = await fetch(`${apiUrl}/api/logout`, {
         method: "POST",
       });
 
