@@ -19,6 +19,7 @@ export async function authUser(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
+      next: { tags: ["tasks"] },
     });
 
     const data: ApiResponse = await response.json();

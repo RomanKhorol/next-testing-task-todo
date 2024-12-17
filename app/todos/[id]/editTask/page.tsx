@@ -18,6 +18,7 @@ async function getTask(id: string): Promise<TaskType | undefined | null> {
     const response = await fetch(`${apiUrl}/tasks/${id}`, {
       method: "GET",
       credentials: "include",
+      next: { tags: ["tasks"] },
     });
     if (!response.ok) {
       throw new Error("Failed to fetch task");

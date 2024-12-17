@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../lib/firebase";
 import { setAuthCookie } from "../../../helpers/setAuthCookie";
+import { revalidateTag } from "next/cache";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,6 +19,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
     setAuthCookie(response, token);
+    revalidateTag("tasks");
     return response;
   } catch (error) {
     if (error instanceof Error) {

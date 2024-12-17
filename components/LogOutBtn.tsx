@@ -11,6 +11,7 @@ export default function LogOutBtn() {
     try {
       const response = await fetch(`${apiUrl}/logout`, {
         method: "POST",
+        next: { tags: ["tasks"] },
       });
 
       if (response.ok) {
