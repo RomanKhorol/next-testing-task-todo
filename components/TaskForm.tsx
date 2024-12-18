@@ -46,6 +46,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
       }
       toast.success("Task deleted successfully!");
       router.push("/todos");
+      router.refresh();
     } catch (error) {
       toast.error(
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -79,6 +80,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         `Task ${method === "POST" ? "created" : "updated"} successfully!`
       );
       router.push("/todos");
+      router.refresh();
     } catch (error) {
       toast.error(
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
