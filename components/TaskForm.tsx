@@ -128,7 +128,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
           rows={4}
         />
       </div>
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4 justify-center md:justify-start">
         <button
           onClick={handleSubmit}
           className={`px-4 py-2 rounded-lg text-white ${
@@ -154,6 +154,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         <button
           onClick={handleCancel}
           className="px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300"
+          style={{ minWidth: "120px" }}
         >
           Cancel
         </button>
