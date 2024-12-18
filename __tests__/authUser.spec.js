@@ -33,7 +33,7 @@ describe("authUser", () => {
           email: "test@example.com",
           password: "password123",
         }),
-        next: { tags: ["tasks"] }, // Новое свойство
+        next: { tags: ["tasks"] },
       }
     );
   });
@@ -53,7 +53,7 @@ describe("authUser", () => {
         email: "test@example.com",
         password: "password123",
       }),
-      next: { tags: ["tasks"] }, // Новое свойство
+      next: { tags: ["tasks"] },
     });
   });
 
@@ -74,7 +74,7 @@ describe("authUser", () => {
         email: "wrong@example.com",
         password: "wrongpassword",
       }),
-      next: { tags: ["tasks"] }, // Новое свойство
+      next: { tags: ["tasks"] },
     });
   });
 

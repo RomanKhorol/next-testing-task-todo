@@ -12,7 +12,6 @@ jest.mock("react-toastify", () => ({
   },
 }));
 
-// Мок useRouter
 const mockPush = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
@@ -20,7 +19,6 @@ jest.mock("next/navigation", () => ({
   })),
 }));
 
-// Мокаем fetch глобально
 beforeEach(() => {
   jest.clearAllMocks();
   global.fetch = jest.fn();
@@ -29,7 +27,6 @@ beforeEach(() => {
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 describe("LogOutBtn Component", () => {
-  // Проверяем рендер кнопки
   test("renders the logout button", () => {
     render(
       <AppRouterContextProviderMock router={{ push: mockPush }}>
@@ -40,7 +37,6 @@ describe("LogOutBtn Component", () => {
     expect(screen.getByText("Log Out")).toBeInTheDocument();
   });
 
-  // Проверяем успешный сценарий
   test("calls fetch and redirects to '/' on successful logout", async () => {
     global.fetch.mockResolvedValueOnce({ ok: true });
 
@@ -66,7 +62,6 @@ describe("LogOutBtn Component", () => {
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 
-  // Проверяем ошибку сервера
   test("shows a toast message on failed logout", async () => {
     global.fetch.mockResolvedValueOnce({ ok: false });
 
@@ -92,7 +87,6 @@ describe("LogOutBtn Component", () => {
     expect(mockPush).not.toHaveBeenCalled();
   });
 
-  // Проверяем сетевую ошибку
   test("handles fetch error gracefully", async () => {
     global.fetch.mockRejectedValueOnce(new Error("Network error"));
 

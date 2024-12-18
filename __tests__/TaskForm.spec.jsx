@@ -11,12 +11,11 @@ import "@testing-library/jest-dom";
 
 const mockApiEndpoint = "/api/tasks";
 
-// Мокаем глобальный fetch
 global.fetch = jest.fn(async (url, options) => {
   console.log("Fetch called with:", url, options);
 
   if (options?.next) {
-    delete options.next; // Удаляем `next`, если он был
+    delete options.next;
   }
 
   return {

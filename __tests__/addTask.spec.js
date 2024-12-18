@@ -5,7 +5,7 @@ describe("addTask", () => {
     fetchMock.resetMocks();
   });
 
-  it("should add task", async () => {
+  test("should add task", async () => {
     const mockResponse = {
       id: "1",
       title: "Test Task",
@@ -27,7 +27,7 @@ describe("addTask", () => {
     });
   });
 
-  it("return err if server is not ok", async () => {
+  test("return err if server is not ok", async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({ message: "Failed to add task" }),
       { status: 400 }
@@ -47,7 +47,7 @@ describe("addTask", () => {
     });
   });
 
-  it("should return error during unexpected error", async () => {
+  test("should return error during unexpected error", async () => {
     fetchMock.mockRejectOnce(new Error("Unexpected error"));
 
     await expect(addTask("Test Task", "Test Description")).rejects.toThrow(

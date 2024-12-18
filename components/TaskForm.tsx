@@ -21,7 +21,8 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
 }) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const router = useRouter();
 
@@ -33,7 +34,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
 
   const handleDelete = async (): Promise<void> => {
     try {
-      setLoading(true);
+      setIsDeleting(true);
       const response = await fetch(apiEndpoint, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +53,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     } finally {
-      setLoading(false);
+      setIsDeleting(false);
     }
   };
 
@@ -63,7 +64,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
     }
 
     try {
-      setLoading(true);
+      setIsSubmitting(true);
       const response = await fetch(apiEndpoint, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -86,7 +87,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         `Error: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -131,21 +132,23 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         <button
           onClick={handleSubmit}
           className={`px-4 py-2 rounded-lg text-white ${
-            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+            isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
           }`}
-          disabled={loading}
+          style={{ minWidth: "120px" }}
+          disabled={isSubmitting}
         >
-          {loading ? "Submitting..." : "Submit"}
+          {isSubmitting ? "Submitting..." : "Submit"}
         </button>
         {id && (
           <button
             onClick={() => handleDelete()}
             className={`px-4 py-2 rounded-lg text-white ${
-              loading ? "bg-gray-400" : "bg-red-500 hover:bg-red-600"
+              isDeleting ? "bg-gray-400" : "bg-red-500 hover:bg-red-600"
             }`}
-            disabled={loading}
+            style={{ minWidth: "120px" }}
+            disabled={isDeleting}
           >
-            {loading ? "Deleting..." : "Delete"}
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
         )}
         <button
